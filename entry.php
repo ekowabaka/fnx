@@ -66,15 +66,16 @@ else
 }
 
 $authExcludedPaths[] = "{$authPackage}/login";
+$request = parse_url(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+$requestPath = Application::$selectedRoute = substr($request['path'], 1);
 
 // Authentication ... check if someone is already logged in if not force 
 // a login
-if ($_SESSION["logged_in"] == false && array_search($_GET["q"], $authExcludedPaths) === false && substr($_GET["q"], 0, 10) != "system/api")
+if ($_SESSION["logged_in"] == false && array_search($requestPath, $authExcludedPaths) === false && substr($requestPath, 0, 10) != "system/api")
 {
-    $redirect = urlencode(Application::getLink("/{$_GET["q"]}"));
-    foreach($_GET as $key=>$value) 
+    $redirect = urlencode(Application::getLink("/$requestPath"));
+    foreach(filter_input_array(INPUT_GET) ?? [] as $key=>$value) 
     {
-        if($key == "q") continue;
         $redirect .= urlencode("$key=$value");
     }
     header("Location: ".Application::getLink("/{$authPackage}/login") . "?redirect=$redirect");
@@ -82,7 +83,7 @@ if ($_SESSION["logged_in"] == false && array_search($_GET["q"], $authExcludedPat
 else if ($_SESSION["logged_in"] === true )
 {        
     // Force a password reset if user is logging in for the first time
-    if ($_SESSION["user_mode"] == 2 && $_GET["q"] != "{$authPackage}/login/change_password")
+    if ($_SESSION["user_mode"] == 2 && $requestPath != "{$authPackage}/login/change_password")
     {
         header("Location: " . Application::getLink("/{$authPackage}/login/change_password"));
     }
@@ -116,7 +117,7 @@ else if ($_SESSION["logged_in"] === true )
         );
     }
 
-    $top_menu_items = explode("/", $_GET["q"]);
+    $top_menu_items = explode("/", $requestPath);
     if($top_menu_items[0] != '')
     {
         for($i = 0; $i < count($top_menu_items); $i++)
@@ -137,11 +138,11 @@ else if ($_SESSION["logged_in"] === true )
 }
 
 // Log the route into the audit trail if it is enabled
-if($_SESSION['logged_in'] == true && ($_GET['q']!='system/api/table') && ENABLE_AUDIT_TRAILS === true)
+if($_SESSION['logged_in'] == true && ($requestPath!='system/api/table') && ENABLE_AUDIT_TRAILS === true)
 {
     $data = json_encode(
         array(
-            'route' => $_GET['q'],
+            'route' => $requestPath,
             'request' => $_REQUEST,
             'get' => $_GET,
             'post' => $_POST
@@ -154,7 +155,7 @@ if($_SESSION['logged_in'] == true && ($_GET['q']!='system/api/table') && ENABLE_
             array(
                 'item_id' => '0',
                 'item_type' =>'routing_activity',
-                'description' => "Accessed [{$_GET['q']}]",
+                'description' => "Accessed [{$requestPath}]",
                 'type' => SystemAuditTrailModel::AUDIT_TYPE_ROUTING,
                 'data' => $data
             )

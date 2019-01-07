@@ -175,6 +175,8 @@ class Application
      */
     public static $defaultRoute = "dashboard";
     
+    public static $selectedRoute = "";
+    
     /**
      * The flag which indicates whether the side menu is visible or not.
      * @var boolean
@@ -273,11 +275,11 @@ class Application
     public static function render()
     {
         $t = Application::$templateEngine;
-        if($_GET["q"]=="")
+        if(Application::$selectedRoute=="")
         {
-            $_GET["q"]= Application::$defaultRoute;
+            Application::$selectedRoute= Application::$defaultRoute;
         }
-        $path = explode("/",$_GET["q"]);
+        $path = explode("/",Application::$selectedRoute);
         Application::$template = "main.tpl";
 
         $t->assign('prefix',Application::$prefix);
