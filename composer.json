@@ -10,8 +10,8 @@
     ],
     "require": {
         "smarty/smarty" : "3.1.19",
-        "phpoffice/phpexcel": "1.8.0",
-        "itbz/fpdf" : "1.7.*",
+        "phpoffice/phpspreadsheet": "@stable",
+        "setasign/fpdf" : "@stable",
         "monolog/monolog": "1.*"
     },
     "require-dev":{

@@ -28,6 +28,15 @@
  */
 
 /**
+ * Run the built in PHP script
+ */
+if (php_sapi_name() == 'cli-server') {
+    require __DIR__ . "/../../autoload.php";
+    $requestUri = filter_input(INPUT_SERVER, 'REQUEST_URI');
+    if(is_file(getcwd() . $requestUri)) return false;
+}
+
+/**
  * If the request is intended for the API then setup the session handlers
  * since the API caller may not have session cookies stored.
  */
