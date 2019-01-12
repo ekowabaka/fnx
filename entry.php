@@ -1,7 +1,7 @@
 <?php
 /*
- * WYF Framework
- * Copyright (c) 2011 James Ekow Abaka Ainooson
+ * FNX Framework
+ * Copyright (c) 2019 James Ekow Abaka Ainooson
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -55,19 +55,11 @@ $authExcludedPaths = array();
 
 $t = new TemplateEngine();
 Application::$templateEngine = $t; 
-
-if(defined('AUTH_PACKAGE'))
-{
-    $authPackage = AUTH_PACKAGE;
-}
-else
-{
-    $authPackage = 'system';
-}
+$authPackage = 'system';
 
 $authExcludedPaths[] = "{$authPackage}/login";
 $request = parse_url(filter_input(INPUT_SERVER, 'REQUEST_URI'));
-$requestPath = Application::$selectedRoute = substr($request['path'], 1);
+$requestPath = Application::$selectedRoute = substr($request['path'], 1 + strlen(Application::$config['prefix']));
 
 // Authentication ... check if someone is already logged in if not force 
 // a login
@@ -163,17 +155,17 @@ if($_SESSION['logged_in'] == true && ($requestPath!='system/api/table') && ENABL
     }
 }  
 
-if(!isset($fapiStyleSheet))
-{
-    Application::preAddStylesheet("css/fapi.css", "vendor/ekowabaka/cfx/fapi/");
-}
-else
-{
-    Application::preAddStylesheet($fapiStyleSheet);
-}
+// if(!isset($fapiStyleSheet))
+// {
+//     Application::preAddStylesheet("css/fapi.css", "vendor/ekowabaka/cfx/fapi/");
+// }
+// else
+// {
+//     Application::preAddStylesheet($fapiStyleSheet);
+// }
 
 Application::preAddStylesheet("kalendae/kalendae.css", Application::getWyfHome('js/'));
-Application::preAddStylesheet("css/main.css");
+//Application::preAddStylesheet("css/main.css");
 Application::addJavaScript(Application::getLink(Application::getWyfHome("fapi/js/fapi.js")));
 Application::addJavaScript(Application::getLink(Application::getWyfHome("js/jquery.js")));
 Application::addJavaScript(Application::getLink(Application::getWyfHome("js/kalendae/kalendae.js")));

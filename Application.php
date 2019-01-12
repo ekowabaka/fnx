@@ -275,8 +275,7 @@ class Application
     public static function render()
     {
         $t = Application::$templateEngine;
-        if(Application::$selectedRoute=="")
-        {
+        if(Application::$selectedRoute=="") {
             Application::$selectedRoute= Application::$defaultRoute;
         }
         $path = explode("/",Application::$selectedRoute);
@@ -287,17 +286,9 @@ class Application
         Application::setTitle();
         $module = Controller::load($path);
         
-        if(Application::$cli)
-        {
-            ob_start();
-        }
-        
-        if(Application::$template == "")
-        {
-            print $module->content;
-        }
-        else
-        {
+        if(Application::$template == "") {
+            echo $module->content;
+        } else {
             $t->assign('content',$module->content);
             $t->assign('module_name', $module->label);
             $t->assign('module_description',$module->description);
@@ -318,19 +309,7 @@ class Application
                 array_merge((is_array($_SESSION['notes']) ? $_SESSION['notes'] : array()), self::$notes)
             );
             $t->display(Application::$template);
-        }
-                
-        if(Application::$cli)
-        {
-            if(Application::$cliOutput=="")
-            {
-                print ob_get_clean();
-            }
-            else
-            {
-                file_put_contents(Application::$cliOutput, ob_get_clean());
-            }
-        }
+        }        
     }
     
     /**
@@ -426,7 +405,7 @@ class Application
         {
             self::$loggers[$channel] = new Logger($channel);
             self::$loggers[$channel]->pushHandler(
-                new StreamHandler("logs/cfx.log", isset(self::$config['log_level']) ? self::$config['log_level'] : Logger::DEBUG)
+                new StreamHandler("logs/fnx.log", isset(self::$config['log_level']) ? self::$config['log_level'] : Logger::DEBUG)
             );            
         }
         return self::$loggers[$channel];

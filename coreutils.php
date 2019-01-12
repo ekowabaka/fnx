@@ -35,7 +35,7 @@ function add_include_path($path, $addBase = true)
 
 function autoloader($class)
 {
-    include_once $class.".php";
+    @include_once $class.".php";
 }
 
 /**

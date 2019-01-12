@@ -184,21 +184,7 @@ class Controller
                 add_include_path("app/modules/$controller_path/");
                 break;
             }
-            else if(file_exists(SOFTWARE_HOME . "app/modules/$controller_path/$p/$p.php"))
-            {
-                $controller_name = $p;
-                $controller_path .= "/$p";
-                $controller_type = Controller::TYPE_MODULE;
-                break;
-            }
             else if(file_exists(SOFTWARE_HOME . "app/modules/$controller_path/$p/{$baseClassName}Model.php"))
-            {
-                $controller_name = $p;
-                $controller_path .= "/$p";
-                $controller_type = Controller::TYPE_MODEL;
-                break;
-            }
-            else if(file_exists(SOFTWARE_HOME . "app/modules/$controller_path/$p/model.xml"))
             {
                 $controller_name = $p;
                 $controller_path .= "/$p";
