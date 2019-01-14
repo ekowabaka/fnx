@@ -131,7 +131,7 @@ class SystemLoginController extends Controller
             /* Verify the password of the user or check if the user is logging in
              * for the first time.
              */
-            if($userData[0]["password"] == md5($data["password"]) || $userData[0]["user_status"] == 2 )
+            if(password_verify($data['password'], $userData[0]["password"]) || $userData[0]["user_status"] == 2 )
             {
                 switch ($userData[0]["user_status"])
                 {

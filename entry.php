@@ -63,7 +63,7 @@ $requestPath = Application::$selectedRoute = substr($request['path'], 1 + strlen
 
 // Authentication ... check if someone is already logged in if not force 
 // a login
-if ($_SESSION["logged_in"] == false && array_search($requestPath, $authExcludedPaths) === false && substr($requestPath, 0, 10) != "system/api")
+if (!isset($_SESSION["logged_in"]) && array_search($requestPath, $authExcludedPaths) === false && substr($requestPath, 0, 10) != "system/api")
 {
     $redirect = urlencode(Application::getLink("/$requestPath"));
     foreach(filter_input_array(INPUT_GET) ?? [] as $key=>$value) 
@@ -72,7 +72,7 @@ if ($_SESSION["logged_in"] == false && array_search($requestPath, $authExcludedP
     }
     header("Location: ".Application::getLink("/{$authPackage}/login") . "?redirect=$redirect");
 }
-else if ($_SESSION["logged_in"] === true )
+else if (isset($_SESSION["logged_in"]))
 {        
     // Force a password reset if user is logging in for the first time
     if ($_SESSION["user_mode"] == 2 && $requestPath != "{$authPackage}/login/change_password")

@@ -227,14 +227,11 @@ class Form extends Container
 
         if($this->getShowSubmit())
         {
-            $ret .= '<div id="fapi-submit-area">';
+            $ret .= '<div class="form-submit-area">';
             $submitValue = $this->submitValue?('value="'.$this->submitValue.'"'):"";
-            if($this->ajaxSubmit)
-            {
+            if($this->ajaxSubmit) {
                 $ret .= sprintf('<input class="fapi-submit" type="button" %s onclick="%s"  /> %s',$submitValue,$onclickFunction,$clearButton);
-            }
-            else
-            {
+            } else {
                 $ret .= sprintf('<input class="fapi-submit" type="submit" %s /> %s',$submitValue,$clearButton);
             }
             $ret .= '</div>';

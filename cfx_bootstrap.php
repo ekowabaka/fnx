@@ -78,7 +78,7 @@ define('CACHE_PREFIX', "");
 define('ENABLE_AUDIT_TRAILS', $config['audit_trails']);
 
 
-if(Application::$config['custom_sessions'])
+if(isset(Application::$config['custom_sessions']))
 {
     $handler = Sessions::getHandler();
     session_set_save_handler

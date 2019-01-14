@@ -364,7 +364,7 @@ class Controller
         return self::$templateEngine;
     }
 
-    private function trimPath($path)
+    private static function trimPath($path)
     {
         $output = array();
         foreach($path as $leg)

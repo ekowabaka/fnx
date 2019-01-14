@@ -25,33 +25,31 @@ function default_renderer_element($element, $showfields=true)
         return $element->render();
     }
     $attributes = $element->getAttributes(Element::SCOPE_WRAPPER);
-    $ret .= "<div $attributes class='fapi-element-div' ".($element->getId()==""?"":"id='".$element->getId()."_wrapper'").">";
+    $ret .= "<div $attributes class='form-element' ".($element->getId()==""?"":"id='".$element->getId()."_wrapper'").">";
 
     if($element->getType()=="Field" && $element->getLabel()!="")
     {
-        $ret .= "<div class='fapi-label'>".$element->getLabel();
+        $ret .= "<label>".$element->getLabel();
         if($element->getRequired() && $element->getLabel()!="" && $element->getShowField())
         {
-            $ret .= "<span class='fapi-required'>*</span>";
+            $ret .= "<span class='form-required'>*</span>";
         }
-        $ret .= "</div>";
+        $ret .= "</label>";
     }
 
-    $ret .= "<div class='fapi-message' id='".$element->getId()."-fapi-message'></div>";
+    $ret .= "<span class='fapi-message' id='".$element->getId()."-fapi-message'></span>";
 
     if($element->hasError())
     {
-        $ret .= "<div class='fapi-error'>";
         $ret .= "<ul>";
         foreach($element->getErrors() as $error)
         {
             $ret .= "<li>$error</li>";
         }
         $ret .= "</ul>";
-        $ret .= "</div>";
     }
 
-    if($element->getType()=="Field")
+    if($element->getType() == "Field")
     {
         if($element->getShowField())
         {

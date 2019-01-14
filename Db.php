@@ -165,7 +165,7 @@ class Db
      * 
      * @return \PDO
      */
-    public static function get($db = null, $atAllCost = false)
+    public static function get($db = null)
     {
         if(class_exists('Application'))
         {
@@ -191,29 +191,20 @@ class Db
             throw new Exception('Invalid configuration parameters passed');
         }
         
-        while(!is_object(Db::$instances[$db]))
-        {
-            $db_host = $database[$db]["host"];
-            $db_port = $database[$db]["port"];
-            $db_name = $database[$db]["name"];
-            $db_user = $database[$db]["user"];
-            $db_password = $database[$db]["password"];
-            
-            Db::$instances[$db] = new PDO("pgsql:host=$db_host;port=$db_port;dbname=$db_name;user=$db_user;password=$db_password");
-            Db::$instances[$db]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $db_host = $database[$db]["host"];
+        $db_port = $database[$db]["port"];
+        $db_name = defined('DB_OVERRIDE') ? DB_OVERRIDE : $database[$db]["dbname"];
+        $db_user = $database[$db]["user"];
+        $db_password = $database[$db]["password"];
+        
+        Db::$instances[$db] = new PDO("pgsql:host=$db_host;dbname=$db_name;user=$db_user;password=$db_password");
+        Db::$instances[$db]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            if(!Db::$instances[$db]) 
-            {
-                if($atAllCost)
-                {
-                    sleep(10);
-                }
-                else
-                {
-                    throw new Exception("Could not connect to $db database");
-                }
-            }
+        if(!Db::$instances[$db]) 
+        {
+                throw new Exception("Could not connect to $db database");
         }
+    
         Db::$lastInstance = $db;
         return Db::$instances[$db];
     }
