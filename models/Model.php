@@ -344,7 +344,7 @@ abstract class Model implements ArrayAccess
             $this->datastore->data[$field] = $value;
         }
 
-        $errors = $this->preValidateHook();
+        $errors = $this->preValidateHook() ?? [];
         $numErrors = count($errors);
         
         if($this->runValidations && Model::$disableAllValidations === false)

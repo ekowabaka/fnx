@@ -257,12 +257,9 @@ class Application
      */
     public static function setTitle($title="")
     {
-        if($title=="")
-        {
+        if($title=="") {
             Application::$title = Application::$siteName;
-        }
-        else
-        {
+        } else {
             Application::$title = $title . " | ". Application::$siteName;
         }
     }
@@ -294,8 +291,7 @@ class Application
             $t->assign('module_description',$module->description);
             $t->assign('side_menu_hidden', self::$sideMenuHidden);
 
-            foreach(array_keys(Application::$menus) as $key)
-            {
+            foreach(array_keys(Application::$menus) as $key) {
                 $t->assign($key, Menu::getContents($key));
             }
             
@@ -322,12 +318,9 @@ class Application
      */
     public static function redirect($url, $notification = false)
     {
-        if(isset($_GET["redirect"]))
-        {
+        if(isset($_GET["redirect"])) {
             header("Location: {$_GET["redirect"]}" . ($notification === false ? '' : "?notification={$notification}"));
-        }
-        else
-        {
+        } else {
             header("Location: $url");
         }
     }

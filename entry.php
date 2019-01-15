@@ -80,7 +80,6 @@ else if (isset($_SESSION["logged_in"]))
         header("Location: " . Application::getLink("/{$authPackage}/login/change_password"));
     }
 
-    Application::addJavaScript(Application::getLink(Application::getWyfHome("js/wyf.js")));
 
     $t->assign('username', $_SESSION["user_name"]);
     $t->assign('firstname', $_SESSION['user_firstname']);
@@ -165,10 +164,12 @@ if($_SESSION['logged_in'] == true && ($requestPath!='system/api/table') && ENABL
 // }
 
 Application::preAddStylesheet("kalendae/kalendae.css", Application::getWyfHome('js/'));
-//Application::preAddStylesheet("css/main.css");
-Application::addJavaScript(Application::getLink(Application::getWyfHome("fapi/js/fapi.js")));
-Application::addJavaScript(Application::getLink(Application::getWyfHome("js/jquery.js")));
-Application::addJavaScript(Application::getLink(Application::getWyfHome("js/kalendae/kalendae.js")));
+Application::preAddStylesheet("css/main.css");
+
+Application::addJavaScript(Application::getWyfHome("js/wyf.js"));
+Application::addJavaScript(Application::getWyfHome("fapi/js/fapi.js"));
+Application::addJavaScript(Application::getWyfHome("js/jquery.js"));
+Application::addJavaScript(Application::getWyfHome("js/kalendae/kalendae.js"));
 
 // Blast the HTML code to the browser!
 Application::setSiteName(Application::$config['name']);

@@ -185,7 +185,7 @@ class SystemRolesController extends ModelController
                 $ret .= "</table></div>";
             }
 
-            if(count($item["children"]>0))
+            if(count($item["children"] ?? []) > 0)
             {
                 $ret = $ret 
                      . $this->drawPermissions($item["children"],$roleId,$level+1);

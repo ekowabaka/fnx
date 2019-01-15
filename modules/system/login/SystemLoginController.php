@@ -76,20 +76,18 @@ class SystemLoginController extends Controller
     public static function change_password_callback($data, $form)
     {
         $home = Application::getLink("/");
-        if ($data["password"] == $data["password2"])
-        {
+        if ($data["password"] == $data["password2"]) {
             $users = Model::load("system.users");
             $userData = $users->getWithField("user_id", $_SESSION["user_id"]);
-            $userData[0]["password"] = md5($data["password"]);
+            $userData[0]["password"] = password_hash($data["password"], PASSWORD_DEFAULT);
+            var_dump($_SESSION);
             $userData[0]["user_status"] = 1;
             $users->setData($userData[0]);
             $users->update("user_id", $_SESSION["user_id"]);
             unset($_SESSION["user_mode"]);
             User::log("Password changed after first log in");
             Application::redirect($home);
-        }
-        else
-        {
+        } else {
             $form->addError("Passwords entered do not match");
         }
         return true;
@@ -134,13 +132,7 @@ class SystemLoginController extends Controller
             if(password_verify($data['password'], $userData[0]["password"]) || $userData[0]["user_status"] == 2 )
             {
                 switch ($userData[0]["user_status"])
-                {
-                    case "0":
-                        $form->addError("Your account is currently inactive"
-                                  . "please contact the system administrator.");
-                        return true;
-                        break;
-                    
+                {                    
                     case "1":
                         $_SESSION["logged_in"] = true;
                         $_SESSION["user_id"] = $userData[0]["user_id"];
@@ -170,6 +162,10 @@ class SystemLoginController extends Controller
                         User::log("Logged in for first time");
                         Application::redirect($home);
                         break;
+                    default:
+                        $form->addError("Your account is currently inactive please contact the system administrator.");
+                        return true;
+                        break;                        
                 }
             }
             else
