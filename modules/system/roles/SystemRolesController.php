@@ -260,8 +260,8 @@ class SystemRolesController extends ModelController
                 {
                     $urlPath = substr(
                         Application::$prefix, 0, 
-                        strlen(Application::$prefix)-1) . 
-                        substr("$originalPath/$entry",strlen($prefix));
+                        strlen(Application::$prefix)) . 
+                        substr("$originalPath/$entry",strlen($prefix) + 1);
                     $modulePath = explode("/", substr(substr("$originalPath/$entry", strlen($prefix)), 1));
                     $module = Controller::load($modulePath, false);
                 }
@@ -269,12 +269,12 @@ class SystemRolesController extends ModelController
                 {
                     $urlPath = substr(
                         Application::$prefix, 0, 
-                        strlen(Application::$prefix)-1) . 
-                        substr("$path/$entry",strlen($prefix));
+                        strlen(Application::$prefix)) . 
+                        substr("$path/$entry",strlen($prefix) + 1);
                     $modulePath = explode("/", substr(substr("$path/$entry", strlen($prefix)), 1));
                     $module = Controller::load($modulePath, false);
                 }
-                                
+
                 if($module->showInMenu())
                 {
                     //$children = $this->getPermissionList("$path/$entry", $prefix);

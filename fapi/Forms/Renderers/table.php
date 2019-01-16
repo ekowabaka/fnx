@@ -1,43 +1,55 @@
 <?php
-global $table_renderer_hidden_fields;
+/**
+ * The default renderer.
+ */
 
+
+/**
+ * The default renderer head function
+ */
 function table_renderer_head()
 {
-    return "<table class='fapi-layout-table'>";
+
 }
 
+/**
+ * The default renderer body function
+ *
+ * @param $element The element to be rendererd.
+ */
 function table_renderer_element($element, $showfields=true)
 {
-    global $table_renderer_hidden_fields;
-    
+    $ret = "";
     if($element->getType()=="HiddenField")
     {
-        $table_renderer_hidden_fields .= $element->render();
-        return;
+        return $element->render();
     }
-    else
-    {
-    	$ret = "<tr ".($element->getId()==""?"":"id='".$element->getId()."_wrapper'")." ".$element->getAttributes(Element::SCOPE_WRAPPER).">";
-    }
-    //$ret .= "<div class='fapi-element-div' ".($element->getId()==""?"":"id='".$element->getId()."_div'").">";
+    $attributes = $element->getAttributes(Element::SCOPE_WRAPPER);
+    $ret .= "<div $attributes class='form-element' ".($element->getId()==""?"":"id='".$element->getId()."_wrapper'").">";
 
-    if($element->getType()=="Field")
+    if($element->getType()=="Field" && $element->getLabel()!="")
     {
-        $ret .= "<td class='fapi-layout-table-label'><div class='fapi-label'>".$element->getLabel();
+        $ret .= "<label>".$element->getLabel();
         if($element->getRequired() && $element->getLabel()!="" && $element->getShowField())
         {
-            $ret .= "<span class='fapi-required'>*</span>";
+            $ret .= "<span class='form-required'>*</span>";
         }
-        $ret .= "</div></td>";        
+        $ret .= "</label>";
     }
-    else if($element->hasLabel() === true)
+
+    $ret .= "<span class='fapi-message' id='".$element->getId()."-fapi-message'></span>";
+
+    if($element->hasError())
     {
-    	$ret .= "<td class='fapi-layout-table-label'><div class='fapi-label'>".$element->getLabel()."</div></td>";
+        $ret .= "<ul>";
+        foreach($element->getErrors() as $error)
+        {
+            $ret .= "<li>$error</li>";
+        }
+        $ret .= "</ul>";
     }
-    
-    
-    $ret .="<td class='fapi-layout-table-field'>";
-    if($element->getType()=="Field")
+
+    if($element->getType() == "Field")
     {
         if($element->getShowField())
         {
@@ -49,40 +61,32 @@ function table_renderer_element($element, $showfields=true)
             $ret .= "<input type='hidden' name='".$element->getName()."' value='".$element->getValue()."'/>";
         }
     }
+    else if($element->getType() == "RadioButton")
+    {
+        if($element->getShowField())
+        {
+            $ret .= $element->render() . "<span class='fapi-label'>" . $element->getLabel() . "</span>";
+        }
+    }
     else
     {
         $ret .= $element->render();
     }
-    
-    $ret .= "<div class='fapi-message' id='".$element->getId()."-fapi-message'></div>";
-
-    if($element->hasError())
-    {
-        $ret .= "<div class='fapi-error'>";
-        $ret .= "<ul>";
-        foreach($element->getErrors() as $error)
-        {
-            $ret .= "<li>$error</li>";
-        }
-        $ret .= "</ul>";
-        $ret .= "</div>";
-    }    
 
     if($element->getType()!="Container" && $element->getShowField())
     {
-        $ret .= "<div class='fapi-description'>".$element->getDescription()."</div>";
+        $ret .= "<div ".($element->getId()==""?"":"id='".$element->getId()."_desc'")." class='fapi-description'>".$element->getDescription()."</div>";
     }
-    //$ret .= "</div>";
-
-    $ret .= "</td></tr>";
+    $ret .= "</div>";
 
     return $ret;
 }
 
+/**
+ * The foot of the default renderer.
+ *
+ */
 function table_renderer_foot()
-{   global $table_renderer_hidden_fields;
-    $hiddenFields = $table_renderer_hidden_fields;
-    $table_renderer_hidden_fields="";
-    return "</table>$hiddenFields";
-}
+{
 
+}
