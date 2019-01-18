@@ -39,19 +39,6 @@ use Monolog\Handler\StreamHandler;
 
 class Application
 {
-    /**
-     * Specifies that the current controller running was loaded from a 
-     * Controller class.
-     * @var string
-     */
-    const TYPE_MODULE = "type_module";
-    
-    /**
-     * Specifies that the current controller running was loaded from a 
-     * Model class.
-     * @var string
-     */
-    const TYPE_MODEL = "type_model";
     
     /**
      * The notes that are currently displayed on the top of the rendered page.
@@ -136,21 +123,6 @@ class Application
     public static  $packagesPath;
     
     /**
-     * Set to true when applicaiton is in CLI mode and false otherwise.
-     * 
-     * @var boolean
-     */
-    public static $cli = false;
-    
-    /**
-     * Contains the output that is generated when the application is executed
-     * throuh the command line interface.
-     * 
-     * @var string
-     */
-    public static $cliOutput = "";
-    
-    /**
      * The current configuration map. Modifying this value during runtime has
      * no effect.
      * @var array
@@ -177,13 +149,9 @@ class Application
     
     public static $selectedRoute = "";
     
-    /**
-     * The flag which indicates whether the side menu is visible or not.
-     * @var boolean
-     */
-    private static $sideMenuHidden = false;
-    
     public static $logger;
+
+    private static $menu;
     
     /**
      * Adds a stylesheet to the list of stylesheets. This method adds
@@ -275,7 +243,7 @@ class Application
         if(Application::$selectedRoute=="") {
             Application::$selectedRoute= Application::$defaultRoute;
         }
-        $path = explode("/",Application::$selectedRoute);
+        $path = explode("/", Application::$selectedRoute);
         Application::$template = "main.tpl";
 
         $t->assign('prefix',Application::$prefix);
@@ -289,7 +257,7 @@ class Application
             $t->assign('content',$module->content);
             $t->assign('module_name', $module->label);
             $t->assign('module_description',$module->description);
-            $t->assign('side_menu_hidden', self::$sideMenuHidden);
+            $t->assign('menu', self::$menu);
 
             foreach(array_keys(Application::$menus) as $key) {
                 $t->assign($key, Menu::getContents($key));
@@ -403,4 +371,14 @@ class Application
         }
         return self::$loggers[$channel];
     }    
+
+    public static function getMenu()
+    {
+        return self::$menu;
+    }
+
+    public static function setMenu($menu)
+    {
+        self::$menu = $menu;
+    }
 }
